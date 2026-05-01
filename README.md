@@ -95,3 +95,26 @@ Ensure you have the EF Core tools installed globally (`dotnet tool install --glo
 - Make sure your SQL Server service is running.
 - Ensure the instance name (`SQLEXPRESS` vs `mssqllocaldb`) in your connection string matches what is actually installed on your machine.
 - If using `SQLEXPRESS`, verify that SQL Server is configured to allow local connections.
+
+
+---
+
+## Project Folder Structure
+
+We have adopted a clear, modular folder structure based on Separation of Concerns. This makes the codebase much easier for a beginner to navigate, and stops the application from becoming a tangled mess as it grows. Feel free to explore the `README.md` files placed inside each respective folder for a friendly explanation of how they work:
+
+- **[Controllers](./VideoGameCharacterApi/Controllers/README.md)**: The "Front Desk". Handles incoming HTTP requests and maps them to endpoints.
+- **[Services](./VideoGameCharacterApi/Services/README.md)**: The "Kitchen". Contains the core business logic of the application.
+- **[Model](./VideoGameCharacterApi/Model/README.md)**: The "Blueprints". Defines core entities mapping exactly to our database schema.
+- **[Dtos](./VideoGameCharacterApi/Dtos/README.md)**: The "Delivery Boxes". Data Transfer Objects to defensively shape data going in/out of the application.
+- **[DataBase](./VideoGameCharacterApi/DataBase/README.md)**: The "Translator". Holds the Entity Framework Core Context (`AppDbContext`), securely translating C# into SQL execution.
+
+---
+
+## Docker
+
+Docker helps us package this application into a "container" that can run consistently anywhere—whether that's your laptop, a coworker's machine, or a cloud server. 
+
+**Why use Docker?**
+- **No More "It works on my machine"**: Containers include the OS, the .NET 10 runtime, and your app all in one package. If it runs on your machine via Docker, it will run identically on the deployment server.
+- **Environment Isolation**: You could spin up a containerized SQL Server database right next to your API container using Docker Compose. This means you don't even have to install SQL Express on your actual host OS, keeping your system fast and clean! To utilize it, simply run your `Dockerfile` using the standard `docker build` and `docker run` commands.
