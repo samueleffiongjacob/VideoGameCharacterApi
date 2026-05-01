@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using VideoGameCharacterApi.Model;
+﻿using Microsoft.AspNetCore.Mvc;
+using VideoGameCharacterApi.Dtos;
 using VideoGameCharacterApi.Services;
 
 namespace VideoGameCharacterApi.Controllers
@@ -12,11 +11,11 @@ namespace VideoGameCharacterApi.Controllers
     public class VedioGameController(IVedioGameCharacterService service) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<Character>>> GetCharacters()
+        public async Task<ActionResult<List<CharacterResponse>>> GetCharacters()
               => Ok(await service.GetAllCharactersAsync());
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Character>> GetCharacterById(int id)
+        public async Task<ActionResult<CharacterResponse>> GetCharacterById(int id)
         {
             var character = await service.GetCharacterByIdAsync(id);
             return character is not null ? Ok(character) : NotFound("Chaaracter with that given ID not Found");
@@ -24,5 +23,28 @@ namespace VideoGameCharacterApi.Controllers
             //    return NotFound();
             //return Ok(character);
         }
+
+        [HttpPost]
+        public async Task<ActionResult<CharacterResponse>> AddCharacter(CreateCharacterRequest character)
+        {
+            var newCharacter = await service.AddCharacterAsync(character);
+            return CreatedAtAction(nameof(GetCharacterById), new { id = newCharacter.Id }, newCharacter);
+        }
+
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateCharacter(int id, UpdateCharacterRequest character)
+        {
+            var isUpdated = await service.UpdateCharacterAsync(id, character);
+            return isUpdated ? NoContent() : NotFound("Chaaracter with that given ID not Found");
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteCharacter(int id)
+        {
+            var isDeleted = await service.DeleteCharacterAsync(id);
+            return isDeleted ? NoContent() : NotFound("Chaaracter with that given ID not Found");
+        }
+
     }
 }
