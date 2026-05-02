@@ -117,4 +117,30 @@ Docker helps us package this application into a "container" that can run consist
 
 **Why use Docker?**
 - **No More "It works on my machine"**: Containers include the OS, the .NET 10 runtime, and your app all in one package. If it runs on your machine via Docker, it will run identically on the deployment server.
-- **Environment Isolation**: You could spin up a containerized SQL Server database right next to your API container using Docker Compose. This means you don't even have to install SQL Express on your actual host OS, keeping your system fast and clean! To utilize it, simply run your `Dockerfile` using the standard `docker build` and `docker run` commands.
+- **Environment Isolation**: You could spin up a containerized SQL Server database right next to your API container using Docker Compose. This means you don't even have to install SQL Express on your actual host OS, keeping your system fast and clean! 
+
+## Docker Compose
+
+We have provided a `docker-compose.yml` file to run the entire backend stack effortlessly. 
+
+The Docker Compose configuration provisions two services:
+1. `db`: A containerized SQL Server instance.
+2. `api`: The Web API itself.
+
+When running via Docker Compose, the API automatically connects to the containerized database (overriding the local development connection string). 
+
+**How to run using Docker Compose:**
+1. Make sure you have [Docker Desktop](https://www.docker.com/products/docker-desktop) installed and running.
+2. Open a terminal at the root of the project where `docker-compose.yml` is located.
+3. Run the following command:
+   ```bash
+   docker-compose up --build
+   ```
+4. Once running:
+   - Your API will be accessible on port `8080/8081` (Check the logs for URL).
+   - The SQL Server container is available on port `1433`. Data is persisted through a Docker volume named `mssql-data`.
+
+To shut it down, press `Ctrl+C` or run:
+```bash
+docker-compose down
+```
