@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=SuperStrongPassword123!
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql
+
+  api:
+    build:
+      context: .
+      dockerfile: VideoGameCharacterApi/Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      # This overrides the DefaultConnection in appsettings.json to point to the 'db' container
+      - ConnectionStrings__DefaultConnection=Server=db;Database=VideoGameCharacterDb;User Id=sa;Password=SuperStrongPassword123!;TrustServerCertificate=True
+    depends_on:
+      - db
+
+volumes:
+  mssql-data:
