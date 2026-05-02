@@ -164,3 +164,45 @@ To shut it down, press `Ctrl+C` or run:
 ```bash
 docker-compose down
 ```
+
+---
+
+## ⚠️ Security Considerations
+
+**This application is currently in development mode and contains hardcoded credentials. Before deploying to any production, shared, or non-local environment, the following security issues MUST be addressed:**
+
+### Credential Management
+
+- **Hardcoded SQL Server password** in `docker-compose.yml` (`MSSQL_SA_PASSWORD=SuperStrongPassword123!`)
+- **Hardcoded connection string** in configuration files
+- **Solution**: Use Azure Key Vault, AWS Secrets Manager, or environment-specific secrets management. Never commit credentials to version control.
+
+### API Authentication & Authorization
+
+- **No authentication implemented** on API endpoints—anyone with network access can read, create, update, or delete character data
+- **No authorization controls** to restrict actions by user roles or permissions
+- **Solution**: Implement JWT token authentication, API keys, or OAuth2. Add role-based access control (RBAC).
+
+### Environment Configuration
+
+- **Development mode enabled in Docker** (lower security logging and error detail masking disabled)
+- **Solution**: Set `ASPNETCORE_ENVIRONMENT=Production` in production deployments and use appropriate environment-specific settings.
+
+### HTTPS & SSL/TLS
+
+- **HTTP redirection is enabled but no SSL/TLS certificate configuration is visible**
+- **Solution**: Configure valid SSL certificates (use Let's Encrypt for development, managed certificates for production).
+
+### Data Protection
+
+- **Connection strings are transmitted without encryption in some contexts**
+- **Solution**: Use encrypted connection strings, enable always-on encryption for sensitive database fields, and implement data classification.
+
+### Recommended Next Steps
+
+1. Move all credentials to a secrets management system
+2. Implement JWT or OAuth2 authentication
+3. Add role-based authorization to protect endpoints
+4. Configure production-grade SSL/TLS certificates
+5. Enable audit logging for all data modifications
+6. Conduct a security review and penetration testing before production deployment
