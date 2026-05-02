@@ -8,6 +8,7 @@ This project is a Web API for managing Video Game Characters. It is built using 
 Scalar is an API reference generator that provides a modern, interactive documentation UI for your OpenAPI/Swagger specifications. In this project, it replaces SwaggerUI to offer a sleek interface for viewing and testing API endpoints.
 
 **Installation & Setup:**
+
 1. Install the `Scalar.AspNetCore` package via NuGet.
 2. In your `Program.cs`, you can map the Scalar API reference endpoint.
 
@@ -30,7 +31,7 @@ This project uses Entity Framework Core with SQL Server.
 
 ### Connection String
 
-Define your connection string in the `appsettings.json` file. 
+Define your connection string in the `appsettings.json` file.
 
 ```json
 {
@@ -39,6 +40,7 @@ Define your connection string in the `appsettings.json` file.
   }
 }
 ```
+
 *(Note: If you do not have a full SQL Server instance or it is not named `SQLEXPRESS`, you can use LocalDB with `"Server=(localdb)\\mssqllocaldb;..."`)*
 
 ### Required NuGet Packages
@@ -46,10 +48,12 @@ Define your connection string in the `appsettings.json` file.
 You can search for these in the NuGet Package Manager and make sure to pick the official Microsoft `10.0.x` packages:
 
 **Providers:**
+
 - `Microsoft.EntityFrameworkCore`
 - `Microsoft.EntityFrameworkCore.SqlServer`
 
 **Tools:**
+
 - `Microsoft.EntityFrameworkCore.Tools` (For Visual Studio Package Manager Console)
 - `Microsoft.EntityFrameworkCore.Design` (Required for EF Core design-time tools)
 
@@ -62,14 +66,19 @@ Once your packages are installed and your `AppDbContext` is registered in `Progr
 Open the Package Manager Console via **View > Other Windows > Package Manager Console**.
 
 1. **Create initial migration:**
+
    ```powershell
    Add-Migration Initial
    ```
+
 2. **Apply migration to the database:**
+
    ```powershell
    Update-Database
    ```
+
 3. **Remove the last migration** (if needed before updating the database):
+
    ```powershell
    Remove-Migration
    ```
@@ -79,23 +88,28 @@ Open the Package Manager Console via **View > Other Windows > Package Manager Co
 Ensure you have the EF Core tools installed globally (`dotnet tool install --global dotnet-ef`). Navigate to the project directory in your terminal before running these commands:
 
 1. **Create initial migration:**
+
    ```bash
    dotnet ef migrations add Initial
    ```
+
 2. **Apply migration to the database:**
+
    ```bash
    dotnet ef database update
    ```
+
 3. **Remove the last migration:**
+
    ```bash
    dotnet ef migrations remove
    ```
 
 ### Troubleshooting Database Connections
+
 - Make sure your SQL Server service is running.
 - Ensure the instance name (`SQLEXPRESS` vs `mssqllocaldb`) in your connection string matches what is actually installed on your machine.
 - If using `SQLEXPRESS`, verify that SQL Server is configured to allow local connections.
-
 
 ---
 
@@ -113,34 +127,40 @@ We have adopted a clear, modular folder structure based on Separation of Concern
 
 ## Docker
 
-Docker helps us package this application into a "container" that can run consistently anywhere—whether that's your laptop, a coworker's machine, or a cloud server. 
+Docker helps us package this application into a "container" that can run consistently anywhere—whether that's your laptop, a coworker's machine, or a cloud server.
 
 **Why use Docker?**
+
 - **No More "It works on my machine"**: Containers include the OS, the .NET 10 runtime, and your app all in one package. If it runs on your machine via Docker, it will run identically on the deployment server.
-- **Environment Isolation**: You could spin up a containerized SQL Server database right next to your API container using Docker Compose. This means you don't even have to install SQL Express on your actual host OS, keeping your system fast and clean! 
+- **Environment Isolation**: You could spin up a containerized SQL Server database right next to your API container using Docker Compose. This means you don't even have to install SQL Express on your actual host OS, keeping your system fast and clean!
 
 ## Docker Compose
 
-We have provided a `docker-compose.yml` file to run the entire backend stack effortlessly. 
+We have provided a `docker-compose.yml` file to run the entire backend stack effortlessly.
 
 The Docker Compose configuration provisions two services:
+
 1. `db`: A containerized SQL Server instance.
 2. `api`: The Web API itself.
 
-When running via Docker Compose, the API automatically connects to the containerized database (overriding the local development connection string). 
+When running via Docker Compose, the API automatically connects to the containerized database (overriding the local development connection string).
 
 **How to run using Docker Compose:**
+
 1. Make sure you have [Docker Desktop](https://www.docker.com/products/docker-desktop) installed and running.
 2. Open a terminal at the root of the project where `docker-compose.yml` is located.
 3. Run the following command:
+
    ```bash
    docker-compose up --build
    ```
+
 4. Once running:
-   - Your API will be accessible on port `8080/8081` (Check the logs for URL).
+   - Your API will be accessible on port `8082/8081` (Check the logs for URL).
    - The SQL Server container is available on port `1433`. Data is persisted through a Docker volume named `mssql-data`.
 
 To shut it down, press `Ctrl+C` or run:
+
 ```bash
 docker-compose down
 ```

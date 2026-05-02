@@ -26,7 +26,15 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    dbContext.Database.Migrate();
+
+    try
+    {
+        dbContext.Database.Migrate();
+    }
+    catch (Microsoft.Data.SqlClient.SqlException ex) when (ex.Number == 1801)
+    {
+        app.Logger.LogWarning("Skipping startup migration because the database already exists.");
+    }
 }
 
 // Configure the HTTP request pipeline.
@@ -35,6 +43,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
+
+app.MapGet("/scalar", () => Results.Redirect("/scalar/v1"));
 
 app.UseHttpsRedirection();
 
